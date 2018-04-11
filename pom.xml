@@ -7,9 +7,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>spring-boot-task</name>
   <url>http://maven.apache.org</url>
-   <properties>
+  <properties>
      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-     <docker.image.prefix>springboot</docker.image.prefix>
   </properties>
    <!-- spring-boot-starter-parent包含了大量配置好的依赖管理，在自己项目添加这些依赖的时候不需要写<version>版本号 -->
   <parent>
@@ -50,16 +49,6 @@
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-quartz</artifactId>
-		</dependency>
-        <dependency>
-             <groupId>org.springframework</groupId>  
-             <artifactId>spring-context-support</artifactId>  
-        </dependency>
-        <!-- druid 连接池 -->  
-        <dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>1.1.9</version>
 		</dependency>
   </dependencies>
   <build>
