@@ -12,7 +12,7 @@ JDK1.8、Maven、Eclipse
 
 ## 技术栈
 
-SpringBoot2.0.1、thymeleaf3.0.9、quartz2.3.0、iview、vue、layer、AdminLTE、bootstrap
+SpringBoot 2.0.1、thymeleaf 3.0.9、quartz 2.3.0、iview、vue、layer、AdminLTE、bootstrap
 
 ## 启动说明
 - 项目使用的数据库为MySql，选择resources/sql中的tables_mysql_innodb.sql文件初始化数据库信息。
@@ -137,3 +137,7 @@ hibernate 5.2 废弃了 setResultTransformer，说是要开发一种新的获取
 
 ![表达式生成器](https://gitee.com/uploads/images/2018/0402/180033_437a1186_87650.png "7.png")
 
+
+作者： 小柒2012
+
+欢迎关注： https://blog.52itstyle.com
