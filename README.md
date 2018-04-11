@@ -43,9 +43,9 @@ Hibernate配置：
 ```
 # spring boot 2.x JPA 依赖  Hibernate 5
 # Hibernate 4 naming strategy fully qualified name. Not supported with Hibernate 5.
-#spring.jpa.hibernate.naming.strategy = org.hibernate.cfg.ImprovedNamingStrategy
+spring.jpa.hibernate.naming.strategy = org.hibernate.cfg.ImprovedNamingStrategy
 # stripped before adding them to the entity manager)
-#spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
 # Hibernate 5
 spring.jpa.hibernate.naming.implicit-strategy=org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
 spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
