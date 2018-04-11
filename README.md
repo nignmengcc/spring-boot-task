@@ -37,7 +37,7 @@ thymeleaf配置：
 #spring boot 1.x
 spring.thymeleaf.mode=LEGACYHTML5
 #spring boot 2.x
-spring.thymeleaf.mode=HTM
+spring.thymeleaf.mode=HTML
 ```
 Hibernate配置：
 ```
