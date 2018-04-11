@@ -6,24 +6,20 @@
 基于spring-boot +quartz 的CRUD任务管理系统：https://gitee.com/52itstyle/spring-boot-quartz
 
 
-
 ## 开发环境
 
 JDK1.8、Maven、Eclipse
 
 ## 技术栈
 
-SpringBoot2.0.1、thymeleaf、quartz2.3.0、iview、vue、layer、AdminLTE、bootstrap
+SpringBoot2.0.1、thymeleaf3.0.9、quartz2.3.0、iview、vue、layer、AdminLTE、bootstrap
 
 ## 启动说明
 - 项目使用的数据库为MySql，选择resources/sql中的tables_mysql_innodb.sql文件初始化数据库信息。
 - 在resources/application.properties文件中替换为自己的数据源。
-- 运行Application main方法，启动项目。
-- 项目访问地址：http://localhost:8080/quartz
-- API接口地址：http://localhost:8080/quartz/swagger-ui.html
+- 运行Application main方法启动项目，项目启动会自动创建一个测试任务 见：com.itstyle.quartz.config.TaskRunner.java。
+- 项目访问地址：http://localhost:8080/task
 
-## 友情提示
-由于工作原因，项目正在完善中（仅供参考），随时更新日志。
 
 ## 项目截图
 
