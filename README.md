@@ -21,6 +21,106 @@ SpringBoot2.0.1、thymeleaf3.0.9、quartz2.3.0、iview、vue、layer、AdminLTE�
 - 项目访问地址：http://localhost:8080/task
 
 
+## 版本区别(spring-boot 1.x and 2.x)
+
+这里只是针对这两个项目异同做比较，当然spring-boot 2.x版本升级还有不少需要注意的地方。
+
+项目名称配置：
+```
+# spring boot 1.x
+server.context-path=/quartz
+# spring boot 2.x
+server.servlet.context-path=/quartz
+```
+thymeleaf配置：
+```
+#spring boot 1.x
+spring.thymeleaf.mode=LEGACYHTML5
+#spring boot 2.x
+spring.thymeleaf.mode=HTM
+```
+Hibernate配置：
+```
+# spring boot 2.x JPA 依赖  Hibernate 5
+# Hibernate 4 naming strategy fully qualified name. Not supported with Hibernate 5.
+#spring.jpa.hibernate.naming.strategy = org.hibernate.cfg.ImprovedNamingStrategy
+# stripped before adding them to the entity manager)
+#spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5Dialect
+# Hibernate 5
+spring.jpa.hibernate.naming.implicit-strategy=org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+```
+quartz配置：
+```
+# spring boot 2.x 已集成Quartz，无需自己配置
+spring.quartz.job-store-type=jdbc
+spring.quartz.properties.org.quartz.scheduler.instanceName=clusteredScheduler
+spring.quartz.properties.org.quartz.scheduler.instanceId=AUTO
+spring.quartz.properties.org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+spring.quartz.properties.org.quartz.jobStore.tablePrefix=QRTZ_
+spring.quartz.properties.org.quartz.jobStore.isClustered=true
+spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval=10000
+spring.quartz.properties.org.quartz.jobStore.useProperties=false
+spring.quartz.properties.org.quartz.threadPool.class=org.quartz.simpl.SimpleThreadPool
+spring.quartz.properties.org.quartz.threadPool.threadCount=10
+spring.quartz.properties.org.quartz.threadPool.threadPriority=5
+spring.quartz.properties.org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread=true
+```
+默认首页配置：
+```java
+/**
+ * 配置首页 spring boot 1.x
+ * 创建者 小柒2012
+ * 创建时间	2017年9月7日
+ */
+@Configuration
+public class MyAdapter extends WebMvcConfigurerAdapter{
+    @Override
+    public void addViewControllers( ViewControllerRegistry registry ) {
+        registry.addViewController( "/" ).setViewName( "forward:/login.shtml" );
+        registry.setOrder( Ordered.HIGHEST_PRECEDENCE );
+        super.addViewControllers( registry );
+    } 
+}
+```
+
+```java
+/**
+ * 配置首页(在SpringBoot2.0及Spring 5.0 WebMvcConfigurerAdapter以被废弃 
+ * 建议实现WebMvcConfigurer接口)
+ * 创建者 小柒2012
+ * 创建时间  2018年4月10日
+ */
+@Configuration
+public class MyAdapter implements WebMvcConfigurer{
+    @Override
+    public void addViewControllers( ViewControllerRegistry registry ) {
+        registry.addViewController( "/" ).setViewName( "forward:/login.shtml" );
+        registry.setOrder( Ordered.HIGHEST_PRECEDENCE );
+    } 
+}
+```
+待解决问题：
+```java
+/**
+	 * Set a strategy for handling the query results. This can be used to change
+	 * "shape" of the query result.
+	 *
+	 * @param transformer The transformer to apply
+	 *
+	 * @return this (for method chaining)
+	 *
+	 * @deprecated (since 5.2)
+	 * @todo develop a new approach to result transformers
+	 */
+	@Deprecated
+	Query<R> setResultTransformer(ResultTransformer transformer);
+```
+hibernate 5.2 废弃了 setResultTransformer，说是要开发一种新的获取集合方法，显然目前还没实现，处于TODO状态。
+
+
+
 ## 项目截图
 
 ![输入图片说明](https://gitee.com/uploads/images/2018/0331/181340_cfbf6c90_87650.png "1.png")
