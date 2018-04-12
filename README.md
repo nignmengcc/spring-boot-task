@@ -147,7 +147,7 @@ spring.quartz.properties.org.quartz.jobStore.isClustered:true
 # 设置集群检查间隔20s
 spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval = 2000  
 ```
-本地跑两个项目，分别设置不同的端口8081和8081，启动成功以后，会发现只有一个任务在跑，然后杀掉在跑的任务，你会发现另一个项目会检测到集群中的一个任务挂了，然后接管任务。
+本地跑两个项目，分别设置不同的端口8081和8082，启动成功以后，会发现只有一个任务在跑，然后杀掉在跑的任务，你会发现另一个项目会检测到集群中的一个任务挂了，然后接管任务。
 ```
 2018-04-12 09:00:01.792  INFO 7488 --- [_ClusterManager] o.s.s.quartz.LocalDataSourceJobStore     : ClusterManager: detected 1 failed or restarted instances.
 2018-04-12 09:00:01.793  INFO 7488 --- [_ClusterManager] o.s.s.quartz.LocalDataSourceJobStore     : ClusterManager: Scanning for instance "itstyle-PC1523496348539"'s failed in-progress jobs.
