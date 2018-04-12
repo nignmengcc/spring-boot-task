@@ -138,6 +138,26 @@ hibernate 5.2 废弃了 setResultTransformer，说是要开发一种新的获取
 ![表达式生成器](https://gitee.com/uploads/images/2018/0402/180033_437a1186_87650.png "7.png")
 
 
+## 集群测试
+
+打开quartz集群配置：
+```
+# 打开集群配置
+spring.quartz.properties.org.quartz.jobStore.isClustered:true
+# 设置集群检查间隔20s
+spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval = 2000  
+```
+本地跑两个项目，分别设置不同的端口8081和8081，启动成功以后，会发现只有一个任务在跑，然后杀掉在跑的任务，你会发现另一个项目会检测到集群中的一个任务挂了，然后接管任务。
+```
+2018-04-12 09:00:01.792  INFO 7488 --- [_ClusterManager] o.s.s.quartz.LocalDataSourceJobStore     : ClusterManager: detected 1 failed or restarted instances.
+2018-04-12 09:00:01.793  INFO 7488 --- [_ClusterManager] o.s.s.quartz.LocalDataSourceJobStore     : ClusterManager: Scanning for instance "itstyle-PC1523496348539"'s failed in-progress jobs.
+2018-04-12 09:00:01.839  INFO 7488 --- [_ClusterManager] o.s.s.quartz.LocalDataSourceJobStore     : ClusterManager: ......Freed 1 acquired trigger(s).
+大吉大利、今晚吃鸡-01
+大吉大利、今晚吃鸡-01
+
+```
+
+
 作者： 小柒2012
 
 欢迎关注： https://blog.52itstyle.com
