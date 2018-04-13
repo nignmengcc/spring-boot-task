@@ -1,7 +1,5 @@
 package com.itstyle.quartz.web;
 
-//import io.swagger.annotations.Api;
-//import io.swagger.annotations.ApiOperation;
 
 import java.util.List;
 
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.itstyle.quartz.entity.QuartzEntity;
 import com.itstyle.quartz.entity.Result;
 import com.itstyle.quartz.service.IJobService;
-//@Api(tags ="Quartz任务")
 @RestController
 @RequestMapping("/job")
 public class JobController {
@@ -39,7 +36,6 @@ public class JobController {
     private IJobService jobService;
     
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	//@ApiOperation(value="新建任务")
 	@PostMapping("/add")
 	public Result save(QuartzEntity quartz){
 		LOGGER.info("新增任务");
@@ -67,16 +63,15 @@ public class JobController {
 		}
 		return Result.ok();
 	}
-	//@ApiOperation(value="任务列表")
 	@PostMapping("/list")
 	public Result list(QuartzEntity quartz,Integer pageNo,Integer pageSize){
 		LOGGER.info("任务列表");
 		List<QuartzEntity> list = jobService.listQuartzEntity(quartz, pageNo, pageSize);
 		return Result.ok(list);
 	}
-	//@ApiOperation(value="触发任务")
 	@PostMapping("/trigger")
 	public  Result trigger(QuartzEntity quartz,HttpServletResponse response) {
+		LOGGER.info("触发任务");
 		try {
 		     JobKey key = new JobKey(quartz.getJobName(),quartz.getJobGroup());
 		     scheduler.triggerJob(key);
@@ -86,11 +81,34 @@ public class JobController {
 		}
 		return Result.ok();
 	}
-	//@ApiOperation(value="移除任务")
+	@PostMapping("/pause")
+	public  Result pause(QuartzEntity quartz,HttpServletResponse response) {
+		LOGGER.info("停止任务");
+		try {
+		     JobKey key = new JobKey(quartz.getJobName(),quartz.getJobGroup());
+		     scheduler.pauseJob(key);
+		} catch (SchedulerException e) {
+			 e.printStackTrace();
+			 return Result.error();
+		}
+		return Result.ok();
+	}
+	@PostMapping("/resume")
+	public  Result resume(QuartzEntity quartz,HttpServletResponse response) {
+		LOGGER.info("恢复任务");
+		try {
+		     JobKey key = new JobKey(quartz.getJobName(),quartz.getJobGroup());
+		     scheduler.resumeJob(key);
+		} catch (SchedulerException e) {
+			 e.printStackTrace();
+			 return Result.error();
+		}
+		return Result.ok();
+	}
 	@PostMapping("/remove")
 	public  Result remove(QuartzEntity quartz,HttpServletResponse response) {
+		LOGGER.info("移除任务");
 		try {  
-			  
             TriggerKey triggerKey = TriggerKey.triggerKey(quartz.getJobName(), quartz.getJobGroup());  
             // 停止触发器  
             scheduler.pauseTrigger(triggerKey);  
