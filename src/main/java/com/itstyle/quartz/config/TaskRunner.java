@@ -48,6 +48,10 @@ public class TaskRunner implements ApplicationRunner{
    	        JobDetail job = JobBuilder.newJob(cls).withIdentity(quartz.getJobName(),
    	        		quartz.getJobGroup())
    	        		.withDescription(quartz.getDescription()).build();
+   	        //添加JobDataMap数据
+   	        job.getJobDataMap().put("itstyle", "科帮网欢迎你");        
+   	        job.getJobDataMap().put("blog", "https://blog.52itstyle.com");        
+		   	job.getJobDataMap().put("data", new String[]{"张三","李四"});  
    	        // 触发时间点
    	        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(quartz.getCronExpression());
    	        Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger"+quartz.getJobName(), quartz.getJobGroup())
