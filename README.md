@@ -157,6 +157,17 @@ spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval = 2000
 
 ```
 
+## 扩展
+
+Quartz API核心接口有：
+
+- Scheduler – 与scheduler交互的主要API；
+- Job – 你通过scheduler执行任务，你的任务类需要实现的接口；
+- JobDetail – 定义Job的实例；
+- Trigger – 触发Job的执行；
+- JobBuilder – 定义和创建JobDetail实例的接口;
+- TriggerBuilder – 定义和创建Trigger实例的接口；
+
 
 作者： 小柒2012
 
