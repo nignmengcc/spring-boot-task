@@ -18,7 +18,7 @@ SpringBoot 2.0.1、thymeleaf 3.0.9、quartz 2.3.0、iview、vue、layer、AdminL
 - 项目使用的数据库为MySql，选择resources/sql中的tables_mysql_innodb.sql文件初始化数据库信息。
 - 在resources/application.properties文件中替换为自己的数据源。
 - 运行Application main方法启动项目，项目启动会自动创建一个测试任务 见：com.itstyle.quartz.config.TaskRunner.java。
-- 项目访问地址：http://localhost:8080/task
+- 项目访问地址：http://localhost:8080/quartz
 
 
 ## 版本区别(spring-boot 1.x and 2.x)
@@ -156,6 +156,17 @@ spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval = 2000
 大吉大利、今晚吃鸡-01
 
 ```
+
+## 扩展
+
+Quartz API核心接口有：
+
+- Scheduler – 与scheduler交互的主要API；
+- Job – 你通过scheduler执行任务，你的任务类需要实现的接口；
+- JobDetail – 定义Job的实例；
+- Trigger – 触发Job的执行；
+- JobBuilder – 定义和创建JobDetail实例的接口;
+- TriggerBuilder – 定义和创建Trigger实例的接口；
 
 
 作者： 小柒2012
