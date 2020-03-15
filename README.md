@@ -143,7 +143,7 @@ hibernate 5.2 废弃了 setResultTransformer，说是要开发一种新的获取
 打开quartz集群配置：
 ```
 # 打开集群配置
-spring.quartz.properties.org.quartz.jobStore.isClustered:true
+spring.quartz.properties.org.quartz.jobStore.isClustered = true
 # 设置集群检查间隔20s
 spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval = 2000  
 ```
