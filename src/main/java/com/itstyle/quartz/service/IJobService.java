@@ -8,5 +8,7 @@ public interface IJobService {
 	
     List<QuartzEntity> listQuartzEntity(QuartzEntity quartz,Integer pageNo,Integer pageSize) throws SchedulerException;
     
-    Long listQuartzEntity(QuartzEntity quartz);	
+    Long listQuartzEntity(QuartzEntity quartz);
+
+    void save(QuartzEntity quartz) throws Exception;
 }

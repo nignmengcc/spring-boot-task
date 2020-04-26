@@ -1,18 +1,12 @@
 package com.itstyle.quartz.web;
 
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.quartz.CronScheduleBuilder;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
+import com.itstyle.quartz.entity.QuartzEntity;
+import com.itstyle.quartz.entity.Result;
+import com.itstyle.quartz.service.IJobService;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,47 +15,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itstyle.quartz.entity.QuartzEntity;
-import com.itstyle.quartz.entity.Result;
-import com.itstyle.quartz.service.IJobService;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 @RestController
 @RequestMapping("/job")
 public class JobController {
+
 	private final static Logger LOGGER = LoggerFactory.getLogger(JobController.class);
-	
 
 	@Autowired
     private Scheduler scheduler;
     @Autowired
     private IJobService jobService;
     
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@PostMapping("/add")
 	public Result save(QuartzEntity quartz){
 		LOGGER.info("新增任务");
-		try {
-	        //如果是修改  展示旧的 任务
-	        if(quartz.getOldJobGroup()!=null){
-	        	JobKey key = new JobKey(quartz.getOldJobName(),quartz.getOldJobGroup());
-	        	scheduler.deleteJob(key);
-	        }
-	        Class cls = Class.forName(quartz.getJobClassName()) ;
-	        cls.newInstance();
-	        //构建job信息
-	        JobDetail job = JobBuilder.newJob(cls).withIdentity(quartz.getJobName(),
-	        		quartz.getJobGroup())
-	        		.withDescription(quartz.getDescription()).build();
-	        // 触发时间点
-	        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(quartz.getCronExpression());
-	        Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger"+quartz.getJobName(), quartz.getJobGroup())
-	                .startNow().withSchedule(cronScheduleBuilder).build();	
-	        //交由Scheduler安排触发
-	        scheduler.scheduleJob(job, trigger);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Result.error();
-		}
-		return Result.ok();
+        try {
+            jobService.save(quartz);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error();
+        }
+        return Result.ok();
 	}
 	@PostMapping("/list")
 	public Result list(QuartzEntity quartz,Integer pageNo,Integer pageSize) throws SchedulerException {
