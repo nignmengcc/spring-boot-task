@@ -12,7 +12,6 @@ public class IndexController {
 	
 	/**
 	 * 页面跳转
-	 * @param module
 	 * @param url
 	 * @return
 	 */
@@ -23,7 +22,6 @@ public class IndexController {
 	/**
 	 * 页面跳转(二级目录)
 	 * @param module
-	 * @param function
 	 * @param url
 	 * @return
 	 */

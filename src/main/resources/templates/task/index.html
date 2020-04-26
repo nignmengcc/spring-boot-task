@@ -57,7 +57,10 @@ var vm = new Vue({
 		}, {
 			key : "jobClassName",
 			title : "执行类"
-		}, {
+		},{
+			key : "jobMethodName",
+			title : "执行方法"
+		},{
 			key : "cronExpression",
 			title : "执行时间"
 		}, {
@@ -242,8 +245,8 @@ var vm = new Vue({
 				url: 'task/add.shtml',
 				//屏幕小 滚动条显示
 				scroll : true,
-				width: '450px',
-				height: '450px',
+				width: '500px',
+				height: '500px',
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
 				},
@@ -255,8 +258,8 @@ var vm = new Vue({
 				url: 'task/add.shtml',
 				//屏幕小 滚动条显示
 				scroll : true,
-				width: '450px',
-				height: '450px',
+				width: '500px',
+				height: '500px',
 				success : function(iframeId){
 					top.frames[iframeId].vm.formQuartz = quartz;
 				},

@@ -64,7 +64,7 @@ public class JobController {
 		return Result.ok();
 	}
 	@PostMapping("/list")
-	public Result list(QuartzEntity quartz,Integer pageNo,Integer pageSize){
+	public Result list(QuartzEntity quartz,Integer pageNo,Integer pageSize) throws SchedulerException {
 		LOGGER.info("任务列表");
 		List<QuartzEntity> list = jobService.listQuartzEntity(quartz, pageNo, pageSize);
 		return Result.ok(list);
