@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * 启动类
- * 创建者 科帮网
+ * 创建者 微信搜索爪哇笔记
  * 创建时间	2018年3月28日
  * API接口测试：http://localhost:8080/task/swagger-ui.html
  */
@@ -16,6 +16,6 @@ public class Application {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
-		logger.info("项目启动 ");
+		logger.info("爪哇笔记定时任务项目启动");
 	}
 }

@@ -1,25 +1,21 @@
 package com.itstyle.quartz.dynamicquery;
-import java.util.List;
+
+import org.hibernate.query.internal.NativeQueryImpl;
+import org.hibernate.transform.Transformers;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 /**
  * 动态jpql/nativesql查询的实现类
  * 创建者 张志朋
  * 创建时间	2018年3月8日
  */
-@SuppressWarnings("deprecation")
 @Repository
 public class DynamicQueryImpl implements DynamicQuery {
-
-	Logger logger = LoggerFactory.getLogger(DynamicQueryImpl.class);
 
 	@PersistenceContext
 	private EntityManager em;
@@ -53,44 +49,35 @@ public class DynamicQueryImpl implements DynamicQuery {
 		Query q = em.createNativeQuery(sql);
 		if (params != null && params.length > 0) {
 			for (int i = 0; i < params.length; i++) {
-				q.setParameter(i + 1, params[i]); // 与Hiberante不同,jpa
-													// query从位置1开始
+				q.setParameter(i + 1, params[i]);
 			}
 		}
 		return q;
 	}
-	@SuppressWarnings({ "unchecked"})
-	@Override
-	public <T> List<T> nativeQueryList(String nativeSql, Object... params) {
-		Query q = createNativeQuery(nativeSql, params);
-		//@todo develop a new approach to result transformers
-		q.unwrap(SQLQuery.class).setResultTransformer(Transformers.TO_LIST);
-		return q.getResultList();
-	}
-	
-	@SuppressWarnings({ "unchecked"})
-	@Override
-	public <T> List<T> nativeQueryListModel(Class<T> resultClass,
-			String nativeSql, Object... params) {
-		Query q = createNativeQuery(nativeSql, params);
-		//@todo develop a new approach to result transformers
-		q.unwrap(SQLQuery.class).setResultTransformer(Transformers.aliasToBean(resultClass));
-		return q.getResultList();
-	}
+    private <T> Query createNativeQuery(Class<T> resultClass, String sql, Object... params) {
+        Query q = em.createNativeQuery(sql);
+        q.unwrap(NativeQueryImpl.class).setResultTransformer(Transformers.aliasToBean(resultClass));
+        if(params!=null){
+            for (int i = 0; i < params.length; i++) {
+                q.setParameter(i + 1, params[i]);
+            }
+        }
+        return q;
+    }
 
-	@SuppressWarnings({ "unchecked"})
-	@Override
-	public <T> List<T> nativeQueryListMap(String nativeSql, Object... params) {
-		Query q = createNativeQuery(nativeSql, params);
-		//@todo develop a new approach to result transformers
-		q.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-		return q.getResultList();
-	}
-	
 	@Override
 	public Long nativeQueryCount(String nativeSql, Object... params) {
 		Object count = createNativeQuery(nativeSql, params).getSingleResult();
 		return ((Number) count).longValue();
 	}
 
+    @Override
+    public <T> List<T> nativeQueryPagingList(Class<T> resultClass, Pageable pageable, String nativeSql,
+                                             Object... params) {
+        Integer pageNumber = pageable.getPageNumber();
+        Integer pageSize = pageable.getPageSize();
+        Integer startPosition = pageNumber * pageSize;
+        return createNativeQuery(resultClass, nativeSql, params).setFirstResult(startPosition).setMaxResults(pageSize)
+                .getResultList();
+    }
 }

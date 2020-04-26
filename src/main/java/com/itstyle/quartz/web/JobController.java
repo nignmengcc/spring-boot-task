@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
 @RestController
 @RequestMapping("/job")
 public class JobController {
@@ -42,8 +43,7 @@ public class JobController {
 	@PostMapping("/list")
 	public Result list(QuartzEntity quartz,Integer pageNo,Integer pageSize) throws SchedulerException {
 		LOGGER.info("任务列表");
-		List<QuartzEntity> list = jobService.listQuartzEntity(quartz, pageNo, pageSize);
-		return Result.ok(list);
+        return jobService.listQuartzEntity(quartz, pageNo, pageSize);
 	}
 	@PostMapping("/trigger")
 	public  Result trigger(QuartzEntity quartz,HttpServletResponse response) {

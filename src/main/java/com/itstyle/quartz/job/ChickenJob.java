@@ -43,4 +43,7 @@ public class ChickenJob implements  Job,Serializable {
     public void test2(){
         System.out.println("测试方法2");
     }
+    public void test3(){
+        System.out.println("测试方法3");
+    }
 }

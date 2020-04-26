@@ -1,15 +1,19 @@
 package com.itstyle.quartz.service.impl;
 
 import com.itstyle.quartz.dynamicquery.DynamicQuery;
+import com.itstyle.quartz.entity.PageBean;
 import com.itstyle.quartz.entity.QuartzEntity;
+import com.itstyle.quartz.entity.Result;
 import com.itstyle.quartz.service.IJobService;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
 import java.util.List;
+
 @Service("jobService")
 public class JobServiceImpl implements IJobService {
 
@@ -19,28 +23,38 @@ public class JobServiceImpl implements IJobService {
     private Scheduler scheduler;
 
 	@Override
-	public List<QuartzEntity> listQuartzEntity(QuartzEntity quartz,
+	public Result listQuartzEntity(QuartzEntity quartz,
 			Integer pageNo, Integer pageSize) throws SchedulerException {
-        StringBuffer nativeSql = new StringBuffer();
-        nativeSql.append("SELECT job.JOB_NAME as jobName,job.JOB_GROUP as jobGroup,job.DESCRIPTION as description,job.JOB_CLASS_NAME as jobClassName,");
-        nativeSql.append("cron.CRON_EXPRESSION as cronExpression,tri.TRIGGER_NAME as triggerName,tri.TRIGGER_STATE as triggerState,");
-        nativeSql.append("job.JOB_NAME as oldJobName,job.JOB_GROUP as oldJobGroup ");
-        nativeSql.append("FROM qrtz_job_details AS job ");
-        nativeSql.append("LEFT JOIN qrtz_triggers AS tri ON job.JOB_NAME = tri.JOB_NAME  AND job.JOB_GROUP = tri.JOB_GROUP ");
-        nativeSql.append("LEFT JOIN qrtz_cron_triggers AS cron ON cron.TRIGGER_NAME = tri.TRIGGER_NAME AND cron.TRIGGER_GROUP= tri.JOB_GROUP ");
-        nativeSql.append("WHERE tri.TRIGGER_TYPE = 'CRON'");
-        Object[] params = new  Object[]{};
-        if(!StringUtils.isEmpty(quartz.getJobName())){//加入JobName搜索其他条件自行实现
-            nativeSql.append(" AND job.JOB_NAME = ?");
-            params = new Object[]{quartz.getJobName()};
+	    String countSql = "SELECT COUNT(*) FROM qrtz_cron_triggers";
+        if(!StringUtils.isEmpty(quartz.getJobName())){
+            countSql+=" AND job.JOB_NAME = "+quartz.getJobName();
         }
-        List<QuartzEntity> list = dynamicQuery.nativeQueryListModel(QuartzEntity.class, nativeSql.toString(), params);
-        for (QuartzEntity quartzEntity : list) {
-            JobKey key = new JobKey(quartzEntity.getJobName(), quartzEntity.getJobGroup());
-            JobDetail jobDetail = scheduler.getJobDetail(key);
-            quartzEntity.setJobMethodName(jobDetail.getJobDataMap().getString("jobMethodName"));
+        Long totalCount = dynamicQuery.nativeQueryCount(countSql);
+        PageBean<QuartzEntity> data = new PageBean<>();
+        if(totalCount>0){
+            StringBuffer nativeSql = new StringBuffer();
+            nativeSql.append("SELECT job.JOB_NAME as jobName,job.JOB_GROUP as jobGroup,job.DESCRIPTION as description,job.JOB_CLASS_NAME as jobClassName,");
+            nativeSql.append("cron.CRON_EXPRESSION as cronExpression,tri.TRIGGER_NAME as triggerName,tri.TRIGGER_STATE as triggerState,");
+            nativeSql.append("job.JOB_NAME as oldJobName,job.JOB_GROUP as oldJobGroup ");
+            nativeSql.append("FROM qrtz_job_details AS job ");
+            nativeSql.append("LEFT JOIN qrtz_triggers AS tri ON job.JOB_NAME = tri.JOB_NAME  AND job.JOB_GROUP = tri.JOB_GROUP ");
+            nativeSql.append("LEFT JOIN qrtz_cron_triggers AS cron ON cron.TRIGGER_NAME = tri.TRIGGER_NAME AND cron.TRIGGER_GROUP= tri.JOB_GROUP ");
+            nativeSql.append("WHERE tri.TRIGGER_TYPE = 'CRON'");
+            Object[] params = new  Object[]{};
+            if(!StringUtils.isEmpty(quartz.getJobName())){
+                nativeSql.append(" AND job.JOB_NAME = ?");
+                params = new Object[]{quartz.getJobName()};
+            }
+            Pageable pageable = PageRequest.of(pageNo-1,pageSize);
+            List<QuartzEntity> list = dynamicQuery.nativeQueryPagingList(QuartzEntity.class,pageable, nativeSql.toString(), params);
+            for (QuartzEntity quartzEntity : list) {
+                JobKey key = new JobKey(quartzEntity.getJobName(), quartzEntity.getJobGroup());
+                JobDetail jobDetail = scheduler.getJobDetail(key);
+                quartzEntity.setJobMethodName(jobDetail.getJobDataMap().getString("jobMethodName"));
+            }
+            data = new PageBean<>(list, totalCount);
         }
-        return list;
+        return Result.ok(data);
 	}
 
 	@Override
@@ -67,6 +81,7 @@ public class JobServiceImpl implements IJobService {
         JobDetail job = JobBuilder.newJob(cls).withIdentity(quartz.getJobName(),
                 quartz.getJobGroup())
                 .withDescription(quartz.getDescription()).build();
+        job.getJobDataMap().put("jobMethodName", quartz.getJobMethodName());
         // 触发时间点
         CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(quartz.getCronExpression());
         Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger"+quartz.getJobName(), quartz.getJobGroup())
