@@ -12,7 +12,7 @@ JDK1.8、Maven、Eclipse
 
 ## 技术栈
 
-SpringBoot 2.0.1、thymeleaf 3.0.9、quartz 2.3.0、iview、vue、layer、AdminLTE、bootstrap
+SpringBoot 2.1.6、thymeleaf 3.0.9、quartz 2.3.0、iview、vue、layer、AdminLTE、bootstrap
 
 ## 启动说明
 - 项目使用的数据库为MySql，选择resources/sql中的tables_mysql_innodb.sql文件初始化数据库信息。
@@ -101,25 +101,6 @@ public class MyAdapter implements WebMvcConfigurer{
     } 
 }
 ```
-待解决问题：
-```java
-/**
-	 * Set a strategy for handling the query results. This can be used to change
-	 * "shape" of the query result.
-	 *
-	 * @param transformer The transformer to apply
-	 *
-	 * @return this (for method chaining)
-	 *
-	 * @deprecated (since 5.2)
-	 * @todo develop a new approach to result transformers
-	 */
-	@Deprecated
-	Query<R> setResultTransformer(ResultTransformer transformer);
-```
-hibernate 5.2 废弃了 setResultTransformer，说是要开发一种新的获取集合方法，显然目前还没实现，处于TODO状态。
-
-
 
 ## 项目截图
 
@@ -171,4 +152,4 @@ Quartz API核心接口有：
 
 作者： 小柒2012
 
-欢迎关注： https://blog.52itstyle.com
+欢迎关注： https://blog.52itstyle.vip
