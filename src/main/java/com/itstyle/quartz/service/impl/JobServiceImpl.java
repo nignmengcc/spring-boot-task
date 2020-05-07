@@ -25,9 +25,9 @@ public class JobServiceImpl implements IJobService {
 	@Override
 	public Result listQuartzEntity(QuartzEntity quartz,
 			Integer pageNo, Integer pageSize) throws SchedulerException {
-	    String countSql = "SELECT COUNT(*) FROM qrtz_cron_triggers";
+	    String countSql = "SELECT COUNT(*) FROM qrtz_job_details AS job ";
         if(!StringUtils.isEmpty(quartz.getJobName())){
-            countSql+=" AND job.JOB_NAME = "+quartz.getJobName();
+            countSql+=" WHERE job.JOB_NAME = "+quartz.getJobName();
         }
         Long totalCount = dynamicQuery.nativeQueryCount(countSql);
         PageBean<QuartzEntity> data = new PageBean<>();
